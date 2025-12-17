@@ -1,0 +1,31 @@
+{
+  "name": "v0-glide-network-webapp",
+  "version": "1.0.0",
+  "description": "A web application for service provider registration and management using Supabase.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "@supabase/supabase-js": "latest"
+  },
+  "devDependencies": {
+    "typescript": "latest",
+    "eslint": "latest",
+    "eslint-config-next": "latest"
+  },
+  "keywords": [
+    "nextjs",
+    "supabase",
+    "service provider",
+    "registration"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}
