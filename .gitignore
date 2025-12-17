@@ -1,0 +1,13 @@
+# dependencies
+node_modules/
+
+# nextjs
+.next/
+out/
+
+# dotenv
+.env*
+!.env.example
+
+# build
+dist/

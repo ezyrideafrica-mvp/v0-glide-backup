@@ -1,9 +1,9 @@
-# Project update and sync
+# Glide Network Webapp
 
 *Automatically synced with your [v0.app](https://v0.app) deployments*
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/ezyrideafrica-9507s-projects/v0-glide-backup)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/exeTFrwfdX6)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/glide-networks-projects/v0-glide-network-webapp)
+[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/obcsBgHfDuD)
 
 ## Overview
 
@@ -14,13 +14,13 @@ Any changes you make to your deployed app will be automatically pushed to this r
 
 Your project is live at:
 
-**[https://vercel.com/ezyrideafrica-9507s-projects/v0-glide-backup](https://vercel.com/ezyrideafrica-9507s-projects/v0-glide-backup)**
+**[https://vercel.com/glide-networks-projects/v0-glide-network-webapp](https://vercel.com/glide-networks-projects/v0-glide-network-webapp)**
 
 ## Build your app
 
 Continue building your app on:
 
-**[https://v0.app/chat/exeTFrwfdX6](https://v0.app/chat/exeTFrwfdX6)**
+**[https://v0.app/chat/obcsBgHfDuD](https://v0.app/chat/obcsBgHfDuD)**
 
 ## How It Works
 

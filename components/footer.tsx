@@ -1,149 +1,73 @@
-import Link from "next/link"
-import { Instagram, Facebook, Twitter, Mail, Phone, MapPin } from "lucide-react"
+import Link from "next/link";
+import Image from "next/image";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-muted/30">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+    <footer className="border-t border-border bg-background">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+
           {/* Brand */}
-          <div className="space-y-4">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-                <span className="text-lg font-bold text-primary-foreground">G</span>
-              </div>
-              <span className="text-xl font-bold text-foreground">Glide Network</span>
-            </Link>
-            <p className="text-sm text-muted-foreground">
-              Your trusted platform for professional services. We connect you with reliable service providers for all
-              your needs.
-            </p>
-            <div className="flex gap-4">
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground transition-colors hover:text-primary"
-              >
-                <Instagram className="h-5 w-5" />
-                <span className="sr-only">Instagram</span>
-              </a>
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground transition-colors hover:text-primary"
-              >
-                <Facebook className="h-5 w-5" />
-                <span className="sr-only">Facebook</span>
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground transition-colors hover:text-primary"
-              >
-                <Twitter className="h-5 w-5" />
-                <span className="sr-only">Twitter</span>
-              </a>
+          <div className="col-span-1">
+            <div className="flex items-center gap-2 mb-4">
+              <Image
+                src="/logo.png"
+                alt="Glide Network"
+                width={128}
+                height={64}
+                className="h-16 w-32"
+              />
             </div>
+            <p className="text-sm text-foreground/70">
+              Your one stop to all services. Fast, reliable, and professional.
+            </p>
           </div>
 
           {/* Quick Links */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-foreground">Quick Links</h3>
+          <div>
+            <h3 className="font-semibold text-primary mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/services"
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  Our Services
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/provider/register"
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  Become a Provider
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-                  Contact Us
-                </Link>
-              </li>
+              <li><Link href="/" className="text-sm text-foreground/70 hover:text-primary">Home</Link></li>
+              <li><Link href="/#services" className="text-sm text-foreground/70 hover:text-primary">Services</Link></li>
+              <li><Link href="/#about" className="text-sm text-foreground/70 hover:text-primary">About</Link></li>
+              <li><Link href="/contact" className="text-sm text-foreground/70 hover:text-primary">Contact</Link></li>
             </ul>
           </div>
 
           {/* Services */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-foreground">Services</h3>
+          <div>
+            <h3 className="font-semibold text-primary mb-4">Services</h3>
             <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/services/market-runs"
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  Market Runs
-                </Link>
-              </li>
-              <li>
-                <span className="text-sm text-muted-foreground">Cleaning Services (Coming Soon)</span>
-              </li>
-              <li>
-                <span className="text-sm text-muted-foreground">Home Repairs (Coming Soon)</span>
-              </li>
-              <li>
-                <span className="text-sm text-muted-foreground">Delivery Services (Coming Soon)</span>
-              </li>
+              <li><a href="#" className="text-sm text-foreground/70 hover:text-primary">City Rides</a></li>
+              <li><a href="#" className="text-sm text-foreground/70 hover:text-primary">Market Runs</a></li>
+              <li><a href="#" className="text-sm text-foreground/70 hover:text-primary">On-Demand Errands</a></li>
+              <li><a href="#" className="text-sm text-foreground/70 hover:text-primary">Premium Mobility</a></li>
             </ul>
           </div>
 
           {/* Contact */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-foreground">Contact Us</h3>
-            <ul className="space-y-3">
-              <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Mail className="h-4 w-4" />
-                <a href="mailto:info@glidenetwork.com" className="transition-colors hover:text-foreground">
-                  info@glidenetwork.com
-                </a>
-              </li>
-              <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Phone className="h-4 w-4" />
-                <a href="tel:+1234567890" className="transition-colors hover:text-foreground">
-                  +1 (234) 567-890
-                </a>
-              </li>
-              <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                <MapPin className="h-4 w-4 mt-0.5" />
-                <span>Lagos, Nigeria</span>
-              </li>
+          <div>
+            <h3 className="font-semibold text-primary mb-4">Contact</h3>
+            <ul className="space-y-2">
+              <li><a href="mailto:info@glidenetwork.biz" className="text-sm text-foreground/70 hover:text-primary">info@glidenetwork.biz</a></li>
+              <li><a href="tel:+2347015471676" className="text-sm text-foreground/70 hover:text-primary">+234 (701) 547 1676</a></li>
+              <li><p className="text-sm text-foreground/70">Lagos, Nigeria</p></li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 md:flex-row">
-          <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} Glide Network. All rights reserved.
+        <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center">
+          <p className="text-sm text-foreground/70">
+            © 2025 Glide Network. All rights reserved. [Built By Golden Creed Technologies]
           </p>
-          <div className="flex gap-6">
-            <Link href="/privacy" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-              Privacy Policy
-            </Link>
-            <Link href="/terms" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-              Terms of Service
-            </Link>
+
+          <div className="flex gap-6 mt-4 md:mt-0">
+            <a href="#" className="text-sm text-foreground/70 hover:text-primary">Privacy</a>
+            <a href="#" className="text-sm text-foreground/70 hover:text-primary">Terms</a>
+            <a href="#" className="text-sm text-foreground/70 hover:text-primary">Cookies</a>
           </div>
         </div>
       </div>
     </footer>
-  )
+  );
 }
