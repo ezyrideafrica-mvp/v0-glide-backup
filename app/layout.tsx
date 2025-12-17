@@ -3,8 +3,7 @@ import type { Metadata, Viewport } from "next"
 import { Geist } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
-import { Footer } from "@/components/footer"
-import { RoleProvider } from "@/app/providers/RoleProvider"
+import { AuthProvider } from "@/lib/auth-context"
 
 const geist = Geist({ subsets: ["latin"] })
 
@@ -76,7 +75,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://glidenetwork.com",
   },
-    generator: 'v0.app'
+  generator: "v0.app",
 }
 
 export const viewport: Viewport = {
@@ -97,14 +96,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="geo.position" content="6.5244;3.3792" />
         <meta name="ICBM" content="6.5244, 3.3792" />
       </head>
-      <body className="antialiased bg-white text-gray-900">
-        <RoleProvider>
-          <main className="min-h-screen flex flex-col">
-            <div className="flex-1">{children}</div>
-            <Footer />
-          </main>
-        </RoleProvider>
-
+      <body className="antialiased bg-background text-foreground">
+        <AuthProvider>{children}</AuthProvider>
         <Analytics />
       </body>
     </html>

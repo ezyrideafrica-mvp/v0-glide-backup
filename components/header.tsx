@@ -14,18 +14,18 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Menu, X, User, LogOut, LayoutDashboard, Settings, ShieldCheck } from "lucide-react"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 
 export function Header() {
-  const { user, profile, isLoading, signOut } = useAuth()
+  const { user, profile, isLoading, isAdmin, signOut } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const router = useRouter()
 
   const handleSignOut = async () => {
     await signOut()
     router.push("/")
+    router.refresh()
   }
-
-  const isAdmin = profile?.role && ["owner", "dev_admin", "marketing_admin", "sales_admin"].includes(profile.role)
 
   const getInitials = (name: string | null, email: string) => {
     if (name) {
@@ -39,14 +39,13 @@ export function Header() {
     return email.slice(0, 2).toUpperCase()
   }
 
+  const displayName = profile?.full_name || profile?.first_name || "User"
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-            <span className="text-lg font-bold text-primary-foreground">G</span>
-          </div>
-          <span className="text-xl font-bold text-foreground">Glide Network</span>
+          <Image src="/logo.png" alt="Glide Network" width={132} height={64} className="h-14 w-auto" priority />
         </Link>
 
         {/* Desktop Navigation */}
@@ -74,7 +73,7 @@ export function Header() {
           </Link>
         </nav>
 
-        {/* Auth Buttons */}
+        {/* Auth Buttons - Fixed auth state handling */}
         <div className="hidden items-center gap-3 md:flex">
           {isLoading ? (
             <div className="h-9 w-20 animate-pulse rounded-md bg-muted" />
@@ -83,16 +82,16 @@ export function Header() {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                   <Avatar className="h-9 w-9">
-                    <AvatarImage src={profile?.avatar_url || ""} alt={profile?.full_name || ""} />
+                    <AvatarImage src={profile?.avatar_url || ""} alt={displayName} />
                     <AvatarFallback className="bg-primary text-primary-foreground">
-                      {getInitials(profile?.full_name || null, user.email || "")}
+                      {getInitials(profile?.full_name || profile?.first_name || null, user.email || "")}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <div className="flex flex-col space-y-1 p-2">
-                  <p className="text-sm font-medium leading-none">{profile?.full_name || "User"}</p>
+                  <p className="text-sm font-medium leading-none">{displayName}</p>
                   <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
                 </div>
                 <DropdownMenuSeparator />
@@ -109,7 +108,7 @@ export function Header() {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/profile/settings" className="flex items-center">
+                  <Link href="/profile" className="flex items-center">
                     <Settings className="mr-2 h-4 w-4" />
                     Settings
                   </Link>

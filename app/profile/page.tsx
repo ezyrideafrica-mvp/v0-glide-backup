@@ -1,153 +1,139 @@
-"use client";
+"use client"
 
-import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Navbar } from "@/components/navbar";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-
-import type { User } from "@supabase/supabase-js";
+import type React from "react"
+import { createClient } from "@/lib/supabase/client"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
+import type { User } from "@supabase/supabase-js"
 
 type Profile = {
-  id: string;
-  created_at: string;
-  first_name: string | null;
-  last_name: string | null;
-  phone: string | null;
-  address: string | null;
-};
+  id: string
+  created_at: string
+  full_name: string | null
+  first_name: string | null
+  last_name: string | null
+  phone: string | null
+  address: string | null
+}
 
 export default function ProfilePage() {
-  const [user, setUser] = useState<User | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
-
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
-  const [message, setMessage] = useState("");
+  const [user, setUser] = useState<User | null>(null)
+  const [profile, setProfile] = useState<Profile | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isSaving, setIsSaving] = useState(false)
+  const [message, setMessage] = useState("")
 
   const [formData, setFormData] = useState({
+    full_name: "",
     first_name: "",
     last_name: "",
     phone: "",
     address: "",
-  });
+  })
 
-  const router = useRouter();
-  const supabase = createClient();
+  const router = useRouter()
+  const supabase = createClient()
 
   useEffect(() => {
     const loadUserData = async () => {
       try {
         const {
           data: { user },
-        } = await supabase.auth.getUser();
+        } = await supabase.auth.getUser()
 
         if (!user) {
-          router.push("/auth/login");
-          return;
+          router.push("/login")
+          return
         }
 
-        setUser(user);
+        setUser(user)
 
-        const { data: profileData } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", user.id)
-          .single();
+        const { data: profileData } = await supabase.from("profiles").select("*").eq("id", user.id).single()
 
         if (profileData) {
-          setProfile(profileData);
+          setProfile(profileData)
           setFormData({
+            full_name: profileData.full_name || "",
             first_name: profileData.first_name || "",
             last_name: profileData.last_name || "",
             phone: profileData.phone || "",
             address: profileData.address || "",
-          });
+          })
         }
       } catch (error) {
-        console.error("Error loading profile:", error);
+        console.error("Error loading profile:", error)
       } finally {
-        setIsLoading(false);
+        setIsLoading(false)
       }
-    };
+    }
 
-    loadUserData();
-  }, []);
+    loadUserData()
+  }, [router, supabase])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
   const handleSaveProfile = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSaving(true);
-    setMessage("");
+    e.preventDefault()
+    setIsSaving(true)
+    setMessage("")
 
     try {
-      if (!user) return;
+      if (!user) return
 
-      const { error } = await supabase
-        .from("profiles")
-        .update(formData)
-        .eq("id", user.id);
+      const { error } = await supabase.from("profiles").update(formData).eq("id", user.id)
 
-      if (error) throw error;
+      if (error) throw error
 
-      setMessage("Profile updated successfully!");
-      setTimeout(() => setMessage(""), 3000);
+      setMessage("Profile updated successfully!")
+      setTimeout(() => setMessage(""), 3000)
     } catch (error) {
-      setMessage(
-        error instanceof Error ? error.message : "Failed to update profile"
-      );
+      setMessage(error instanceof Error ? error.message : "Failed to update profile")
     } finally {
-      setIsSaving(false);
+      setIsSaving(false)
     }
-  };
+  }
 
   const handleLogout = async () => {
     try {
-      await supabase.auth.signOut();
-      router.push("/");
+      await supabase.auth.signOut()
+      router.push("/")
     } catch (error) {
-      console.error("Error logging out:", error);
+      console.error("Error logging out:", error)
     }
-  };
+  }
 
   if (isLoading) {
     return (
       <>
-        <Navbar />
+        <Header />
         <div className="flex items-center justify-center min-h-screen">
-          <p>Loading...</p>
+          <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
         </div>
+        <Footer />
       </>
-    );
+    )
   }
 
   return (
     <>
-      <Navbar />
-      <main className="min-h-screen bg-muted/50">
+      <Header />
+      <main className="min-h-screen bg-muted/30">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="mb-8">
-            <Link
-              href="/dashboard"
-              className="text-primary hover:underline mb-4 inline-block"
-            >
+            <Link href="/dashboard" className="text-primary hover:underline mb-4 inline-block">
               ← Back to Dashboard
             </Link>
             <h1 className="text-4xl font-bold">Profile Settings</h1>
@@ -163,6 +149,17 @@ export default function ProfilePage() {
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSaveProfile} className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="full_name">Full Name</Label>
+                      <Input
+                        id="full_name"
+                        name="full_name"
+                        value={formData.full_name}
+                        onChange={handleInputChange}
+                        placeholder="Your full name"
+                      />
+                    </div>
+
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="first_name">First Name</Label>
@@ -186,12 +183,7 @@ export default function ProfilePage() {
 
                     <div className="space-y-2">
                       <Label htmlFor="email">Email</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={user?.email || ""}
-                        disabled
-                      />
+                      <Input id="email" type="email" value={user?.email || ""} disabled />
                     </div>
 
                     <div className="space-y-2">
@@ -201,6 +193,7 @@ export default function ProfilePage() {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
+                        placeholder="+234 800 000 0000"
                       />
                     </div>
 
@@ -211,17 +204,12 @@ export default function ProfilePage() {
                         name="address"
                         value={formData.address}
                         onChange={handleInputChange}
+                        placeholder="Your delivery address"
                       />
                     </div>
 
                     {message && (
-                      <p
-                        className={`text-sm ${
-                          message.includes("success")
-                            ? "text-green-600"
-                            : "text-destructive"
-                        }`}
-                      >
+                      <p className={`text-sm ${message.includes("success") ? "text-green-600" : "text-destructive"}`}>
                         {message}
                       </p>
                     )}
@@ -241,17 +229,10 @@ export default function ProfilePage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <p className="text-sm text-muted-foreground mb-2">
-                    Member since{" "}
-                    {profile
-                      ? new Date(profile.created_at).toLocaleDateString()
-                      : ""}
+                    Member since {profile ? new Date(profile.created_at).toLocaleDateString() : ""}
                   </p>
 
-                  <Button
-                    variant="destructive"
-                    className="w-full"
-                    onClick={handleLogout}
-                  >
+                  <Button variant="destructive" className="w-full" onClick={handleLogout}>
                     Sign Out
                   </Button>
                 </CardContent>
@@ -262,7 +243,7 @@ export default function ProfilePage() {
                   <CardTitle className="text-lg">Help & Support</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Button variant="outline" className="w-full" asChild>
+                  <Button variant="outline" className="w-full bg-transparent" asChild>
                     <Link href="/contact">Contact Support</Link>
                   </Button>
                 </CardContent>
@@ -271,6 +252,7 @@ export default function ProfilePage() {
           </div>
         </div>
       </main>
+      <Footer />
     </>
-  );
+  )
 }

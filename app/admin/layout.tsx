@@ -15,18 +15,25 @@ export default async function AdminLayout({
   } = await supabase.auth.getUser()
 
   if (!user) {
-    redirect("/auth/login?redirect_to=/admin")
+    redirect("/login?redirect_to=/admin")
   }
 
   // Check if user has admin role
-  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single()
+  let profile = null
+  try {
+    const { data } = await supabase.from("profiles").select("role").eq("id", user.id).single()
+    profile = data
+  } catch {
+    // Profile table might not exist
+  }
 
-  if (profile?.role !== "admin" && profile?.role !== "super_admin") {
+  const adminRoles = ["owner", "dev_admin", "marketing_admin", "sales_admin"]
+  if (!profile?.role || !adminRoles.includes(profile.role)) {
     redirect("/unauthorized")
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-muted/30">
       <AdminSidebar userRole={profile?.role} />
       <main className="flex-1 p-8 ml-64">{children}</main>
     </div>

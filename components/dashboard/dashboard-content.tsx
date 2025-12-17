@@ -4,24 +4,28 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ShoppingBag, Clock, CheckCircle, AlertCircle, ArrowRight, Settings } from "lucide-react"
+import { ShoppingBag, Clock, CheckCircle, AlertCircle, ArrowRight, Settings, User } from "lucide-react"
 import type { User as SupabaseUser } from "@supabase/supabase-js"
 
 type Profile = {
   id: string
-  email: string
-  full_name: string | null
-  phone: string | null
-  avatar_url: string | null
-  role: string
-  created_at: string
+  email?: string
+  full_name?: string | null
+  first_name?: string | null
+  last_name?: string | null
+  phone?: string | null
+  avatar_url?: string | null
+  role?: string
+  created_at?: string
 } | null
 
 type Order = {
   id: string
-  service_type: string
-  status: string
-  total_amount: number | null
+  service_type?: string
+  status?: string
+  total_amount?: number | null
+  estimate?: { total?: number } | null
+  dropoff?: string
   created_at: string
 }
 
@@ -56,16 +60,16 @@ export function DashboardContent({ user, profile, orders }: DashboardContentProp
       case "cancelled":
         return <Badge variant="destructive">Cancelled</Badge>
       default:
-        return <Badge variant="secondary">{status}</Badge>
+        return <Badge variant="secondary">{status || "Unknown"}</Badge>
     }
   }
+
+  const displayName = profile?.full_name || profile?.first_name || user.email?.split("@")[0] || "User"
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground">
-          Welcome back, {profile?.full_name || user.email?.split("@")[0]}!
-        </h1>
+        <h1 className="text-3xl font-bold text-foreground">Welcome back, {displayName}!</h1>
         <p className="mt-1 text-muted-foreground">Here&apos;s an overview of your recent activity</p>
       </div>
 
@@ -78,7 +82,7 @@ export function DashboardContent({ user, profile, orders }: DashboardContentProp
           </CardHeader>
           <CardContent>
             <div className="grid gap-4 sm:grid-cols-2">
-              <Link href="/services/market-runs" className="group">
+              <Link href="/services/market" className="group">
                 <div className="flex items-center gap-4 rounded-lg border border-border p-4 transition-colors hover:bg-muted">
                   <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                     <ShoppingBag className="h-6 w-6 text-primary" />
@@ -93,23 +97,11 @@ export function DashboardContent({ user, profile, orders }: DashboardContentProp
               <Link href="/profile" className="group">
                 <div className="flex items-center gap-4 rounded-lg border border-border p-4 transition-colors hover:bg-muted">
                   <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-accent/50">
-                    <Settings className="h-6 w-6 text-accent-foreground" />
+                    <User className="h-6 w-6 text-accent-foreground" />
                   </div>
                   <div className="flex-1">
                     <h3 className="font-semibold text-foreground">My Profile</h3>
                     <p className="text-sm text-muted-foreground">View and edit your profile</p>
-                  </div>
-                  <ArrowRight className="h-5 w-5 text-muted-foreground transition-transform group-hover:translate-x-1" />
-                </div>
-              </Link>
-              <Link href="/profile/settings" className="group">
-                <div className="flex items-center gap-4 rounded-lg border border-border p-4 transition-colors hover:bg-muted">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-muted">
-                    <Settings className="h-6 w-6 text-muted-foreground" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-foreground">Settings</h3>
-                    <p className="text-sm text-muted-foreground">Manage your account</p>
                   </div>
                   <ArrowRight className="h-5 w-5 text-muted-foreground transition-transform group-hover:translate-x-1" />
                 </div>
@@ -122,6 +114,18 @@ export function DashboardContent({ user, profile, orders }: DashboardContentProp
                   <div className="flex-1">
                     <h3 className="font-semibold text-foreground">All Services</h3>
                     <p className="text-sm text-muted-foreground">Browse available services</p>
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-muted-foreground transition-transform group-hover:translate-x-1" />
+                </div>
+              </Link>
+              <Link href="/contact" className="group">
+                <div className="flex items-center gap-4 rounded-lg border border-border p-4 transition-colors hover:bg-muted">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-muted">
+                    <Settings className="h-6 w-6 text-muted-foreground" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-foreground">Get Help</h3>
+                    <p className="text-sm text-muted-foreground">Contact support</p>
                   </div>
                   <ArrowRight className="h-5 w-5 text-muted-foreground transition-transform group-hover:translate-x-1" />
                 </div>
@@ -161,9 +165,6 @@ export function DashboardContent({ user, profile, orders }: DashboardContentProp
             <CardTitle>Recent Orders</CardTitle>
             <CardDescription>Your latest service requests</CardDescription>
           </div>
-          <Button variant="outline" size="sm" asChild>
-            <Link href="/orders">View All</Link>
-          </Button>
         </CardHeader>
         <CardContent>
           {orders.length === 0 ? (
@@ -180,15 +181,23 @@ export function DashboardContent({ user, profile, orders }: DashboardContentProp
               {orders.map((order) => (
                 <div key={order.id} className="flex items-center justify-between rounded-lg border border-border p-4">
                   <div className="flex items-center gap-4">
-                    {getStatusIcon(order.status)}
+                    {getStatusIcon(order.status || "pending")}
                     <div>
-                      <p className="font-medium text-foreground">{order.service_type}</p>
-                      <p className="text-sm text-muted-foreground">{new Date(order.created_at).toLocaleDateString()}</p>
+                      <p className="font-medium text-foreground">{order.service_type || "Market Run"}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {order.dropoff
+                          ? order.dropoff.slice(0, 30) + "..."
+                          : new Date(order.created_at).toLocaleDateString()}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
-                    {order.total_amount && <span className="font-medium">₦{order.total_amount.toLocaleString()}</span>}
-                    {getStatusBadge(order.status)}
+                    {(order.total_amount || order.estimate?.total) && (
+                      <span className="font-medium">
+                        ₦{(order.total_amount || order.estimate?.total || 0).toLocaleString()}
+                      </span>
+                    )}
+                    {getStatusBadge(order.status || "pending")}
                   </div>
                 </div>
               ))}
